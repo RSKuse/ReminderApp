@@ -82,6 +82,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
          taskTableView.deselectRow(at: indexPath, animated: true)
          let detailReminderViewController = DetailTaskViewController()
          detailReminderViewController.task = taskArray[indexPath.row]
+        
+        // 3: Listen for Closure Triggered
+        detailReminderViewController.deleteTask = {
+            self.taskArray.remove(at: indexPath.row)
+            self.taskTableView.reloadData()
+        }
          navigationController?.pushViewController(detailReminderViewController, animated: true)
      }
     
@@ -89,11 +95,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @objc func createTaskButtonPressed() {
         let newReminderViewController = NewRemindersViewController()
 
-        newReminderViewController.createdTask = { taskCreated in
-            self.taskArray.append(taskCreated)
-            self.taskTableView.reloadData() // tells the tableView to reload / update its UI.
+        // 3. Listen for the tigger
+        newReminderViewController.createdTask = { (createdTaskValue) in
+            self.taskArray.append(createdTaskValue)
+            self.taskTableView.reloadData()
         }
-
+        
         let newReminderVC = UINavigationController(rootViewController: newReminderViewController)
         newReminderVC.modalPresentationStyle = .fullScreen
         present(newReminderVC, animated: true, completion: nil)

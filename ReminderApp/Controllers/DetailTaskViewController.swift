@@ -10,15 +10,11 @@ import UIKit
 
 class DetailTaskViewController: UIViewController {
     
-    // Task has no value. It is set to nil. You can listen for when the value is changed or nil is changed to a value.
-    var task: Task? {
-        didSet {
-            guard let newTask = task else {
-                return
-            }
-            detailLabel.text = newTask.title  
-        }
-    }
+    var task: Task?
+    
+    // 1. Create the Closure
+    // We already have a task. We don't need to create one.
+    var deleteTask: (() -> Void)?
     
     lazy var detailLabel: UILabel = {
        let label = UILabel()
@@ -58,6 +54,7 @@ class DetailTaskViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         setupUI()
+        detailLabel.text = task?.title
         let threeDotsBarButtonItem = UIBarButtonItem(customView: threeDotsButton)
         navigationItem.rightBarButtonItem = threeDotsBarButtonItem
     }
@@ -83,6 +80,8 @@ class DetailTaskViewController: UIViewController {
         
     }
     
+    
+    
     @objc func threeDotsButtonTapped() {
         
         let alertController = UIAlertController(title: nil,
@@ -90,7 +89,15 @@ class DetailTaskViewController: UIViewController {
                                                 preferredStyle: UIAlertController.Style.actionSheet)
         
         let deleteButton = UIAlertAction(title: "Delete",
-                                        style: .destructive, handler: { (_) -> Void in
+                                         style: .destructive,
+                                         handler: { _ in
+            
+            // 2: Trigger the Closure
+            self.deleteTask?()
+
+            // Navigation
+            self.navigationController?.popViewController(animated: true)
+            
         })
         
         let cancelButton = UIAlertAction(title: "Cancel",

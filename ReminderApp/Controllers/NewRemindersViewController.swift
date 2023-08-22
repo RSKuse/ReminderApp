@@ -10,9 +10,14 @@ import UIKit
 
 class NewRemindersViewController: UIViewController, UITextFieldDelegate {
     
-    
     // 1. Closure
     var createdTask: ((Task) -> Void)?
+    
+    // Closure Examples
+    var changeNumber: ((Int) -> Void)?
+    var didUpdateStatus: ((Bool) -> Void)?
+    var colourChanged: ((String) -> Void)?
+    var didDelete: (() -> Void)?
     
     lazy var titleLabel: UILabel = {
         let label = UILabel()
@@ -81,46 +86,24 @@ class NewRemindersViewController: UIViewController, UITextFieldDelegate {
     
     @objc func addReminder() {
         
+        let reminderString = reminderTextField.text
+        print(reminderString)
+        
+        
+        let task = Task(title: reminderString!)
+        
+        // 2: Fire off/Tigger the Closure here.
+        createdTask?(task)
+        
+        
         /*
-        let taskFromTextField = reminderTextField.text
-        if taskFromTextField != nil && taskFromTextField!.isEmpty == false {
-            let newTask = Task(title: taskFromTextField!)
-            createdTask?(newTask)
-            dismiss(animated: true)
-        }
-        */
-        
-        //////////////////////////
-        
-        // Guard
-        /*
-        let taskfromTextField = reminderTextField.text // potential to be nil
-        if taskfromTextField == nil {
-            return // Stop the code from executing beyond here.
-        }
-        */
-        
-        
-        /////////////////////////
-        // Guards are used when there is a chance that some value is nil.
-        guard let taskFromTextField = reminderTextField.text else {
-            return // Stop the code from executing beyond  Ohere.
-        }
-        
-        // If a value is NIL. Swift allows you to unwrap it with a "!". if the value indeed is NIL, unwrapping it like this will cause your app to crash.
-        // "" vs nil
         if taskFromTextField.isEmpty == true {
-            return // Stop the code from executing beyond here
+            return
         }
-        
-        var something = "" // empty // 0x6000020b9000
-        var somethingElse: String? // nil
-        
         let newTask = Task(title: taskFromTextField)
-        // 2. Closure
         createdTask?(newTask)
+        */
         dismiss(animated: true)
-        
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
